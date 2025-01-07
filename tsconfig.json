@@ -1,0 +1,25 @@
+{
+	"compilerOptions": {
+		"esModuleInterop": true,
+		"outDir": "./dist/",
+		"moduleResolution": "node",
+		"noImplicitAny": true,
+		"noImplicitThis": true,
+		"strictNullChecks": true,
+		"strictFunctionTypes": true,
+		"sourceMap": false,
+		"target": "ES2022",
+		"module": "ES2022",
+		"jsx": "react",
+		"allowJs": true,
+		"strict": true,
+		"forceConsistentCasingInFileNames": true,
+		"lib": [
+			"ES2022",
+			"DOM"
+		]
+	},
+	"exclude": [
+		"spec"
+	]
+}

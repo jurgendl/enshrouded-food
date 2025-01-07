@@ -1,0 +1,1 @@
+https://enshrouded.wiki.gg/wiki/Consumables
