@@ -69,9 +69,11 @@ export class App {
 		const itemsMap = new Map<string, Item>();
 		enshroudedFood.items.forEach(item => itemsMap.set(item.name, item));
 		const allReqs: string[] = [];
+		const allItems: string[] = [];
 
 		for (const item of enshroudedFood.items) {
 			if (item.effect) {
+				allItems.push(item.name);
 				const reqs: string[] = [];
 				item.requirements?.forEach(r => reqs.push(r));
 				console.log(item.name);
@@ -104,6 +106,8 @@ export class App {
 		}
 		allReqs.sort();
 		console.log(JSON.stringify(allReqs, null, 2));
+		allItems.sort();
+		console.log(JSON.stringify(allItems, null, 2));
 	}
 
 	collapseIngredients(ingredients: Ingredient[]): Ingredient[] {
