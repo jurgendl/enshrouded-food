@@ -14,7 +14,7 @@ export interface Item {
 	duration?: string;
 	type?: string;
 	requirements?: string[];
-	ingredients: Ingredient[]
+	ingredients?: Ingredient[]
 }
 
 export interface Ingredient {
@@ -68,12 +68,22 @@ export class App {
 
 		const itemsMap = new Map<string, Item>();
 		enshroudedFood.items.forEach(item => itemsMap.set(item.name, item));
+		const allReqs: string[] = [];
 
 		for (const item of enshroudedFood.items) {
-			if (item.effect && item.ingredients) {
+			if (item.effect) {
 				const reqs: string[] = [];
 				item.requirements?.forEach(r => reqs.push(r));
-				const ingredientsCollected = this.collapseIngredients(this.collateIngredients(reqs, itemsMap, 1 / (item.count ?? 1), item.ingredients));
+				console.log(item.name);
+				console.log(item.ingredients);
+				let ingredientsCollected: Ingredient[];
+				if (item.ingredients) {
+					const localWeight = 1 / (item.count ?? 1);
+					const tmp = this.collateIngredients(allReqs, reqs, itemsMap, localWeight, item.ingredients);
+					ingredientsCollected = this.collapseIngredients(tmp);
+				} else {
+					ingredientsCollected = [];
+				}
 				ingredientsCollected.forEach(it => {
 					it.count = Number(it.count!.toFixed(1));
 					if (it.count == 0) it.count = 0.1;
@@ -92,6 +102,8 @@ export class App {
 				console.log("");
 			}
 		}
+		allReqs.sort();
+		console.log(JSON.stringify(allReqs, null, 2));
 	}
 
 	collapseIngredients(ingredients: Ingredient[]): Ingredient[] {
@@ -111,16 +123,20 @@ export class App {
 		return collapsed;
 	}
 
-	collateIngredients(reqs: string[], itemsMap: Map<string, Item>, weight: number, ingredients: Ingredient[]): Ingredient[] {
+	collateIngredients(allReqs: string[], reqs: string[], itemsMap: Map<string, Item>, weight: number, ingredients: Ingredient[]): Ingredient[] {
+		console.log(JSON.stringify(ingredients, null, 2));
 		const ingredientsCollected: Ingredient[] = [];
 		for (const ingredient of ingredients) {
+			if (!allReqs.includes(ingredient.name)) allReqs.push(ingredient.name);
 			let localWeight = weight * (ingredient.count ?? 1);
 			if (itemsMap.has(ingredient.name)) {
 				const deep = itemsMap.get(ingredient.name) as Item;
 				deep.requirements?.forEach(r => reqs.push(r));
-				localWeight /= (deep.count ?? 1);
-				const deepIngredients: Ingredient[] = this.collateIngredients(reqs, itemsMap, localWeight, deep.ingredients);
-				ingredientsCollected.push(...deepIngredients);
+				if(deep.ingredients) {
+					localWeight /= (deep.count ?? 1);
+					const deepIngredients: Ingredient[] = this.collateIngredients(allReqs, reqs, itemsMap, localWeight, deep.ingredients);
+					ingredientsCollected.push(...deepIngredients);
+				}
 			} else {
 				ingredientsCollected.push({name: ingredient.name, count: localWeight});
 			}
