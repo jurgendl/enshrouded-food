@@ -67,7 +67,7 @@ export class App {
 		window.localStorage.setItem(this.localStorageVersionName, this.version);
 
 		const itemsMap = new Map<string, Item>();
-		enshroudedFood.items.forEach(item => itemsMap.set(item.name, item));
+		enshroudedFood.items.filter(item => !!item.ingredients).forEach(item => itemsMap.set(item.name, item));
 		const allReqs: string[] = [];
 		const allItems: string[] = [];
 
@@ -76,8 +76,6 @@ export class App {
 				allItems.push(item.name);
 				const reqs: string[] = [];
 				item.requirements?.forEach(r => reqs.push(r));
-				console.log(item.name);
-				console.log(item.ingredients);
 				let ingredientsCollected: Ingredient[];
 				if (item.ingredients) {
 					const localWeight = 1 / (item.count ?? 1);
@@ -99,9 +97,6 @@ export class App {
 					ingredients: ingredientsCollected
 				};
 				console.log(JSON.stringify(consolidated, null, 2));
-				console.log("");
-				console.log("");
-				console.log("");
 			}
 		}
 		allReqs.sort();
@@ -128,7 +123,6 @@ export class App {
 	}
 
 	collateIngredients(allReqs: string[], reqs: string[], itemsMap: Map<string, Item>, weight: number, ingredients: Ingredient[]): Ingredient[] {
-		console.log(JSON.stringify(ingredients, null, 2));
 		const ingredientsCollected: Ingredient[] = [];
 		for (const ingredient of ingredients) {
 			if (!allReqs.includes(ingredient.name)) allReqs.push(ingredient.name);

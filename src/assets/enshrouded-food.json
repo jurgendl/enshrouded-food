@@ -1391,171 +1391,114 @@
 		{
 			"name": "tomato",
 			"type": "vegetable",
-			"requirements": [
-				"gatherable"
-			],
 			"duration": "10m",
 			"effect": "+3 dexterity"
 		},
 		{
 			"name": "bell pepper",
 			"type": "vegetable",
-			"requirements": [
-				"gatherable"
-			],
 			"duration": "10m",
 			"effect": "+3 dexterity"
 		},
 		{
 			"name": "forest beet",
 			"type": "vegetable",
-			"requirements": [
-				"gatherable"
-			],
 			"duration": "15m",
 			"effect": "+1 dexterity"
 		},
 		{
 			"name": "honey",
 			"type": "sweet",
-			"requirements": [
-				"gatherable"
-			],
 			"duration": "3m",
 			"effect": "+15 stamina recharge"
 		},
 		{
 			"name": "yucca fruit",
 			"type": "fruit",
-			"requirements": [
-				"gatherable"
-			],
 			"duration": "25m",
 			"effect": "+2 health regeneration, +1 stamina recharge"
 		},
 		{
 			"name": "strawberry",
 			"type": "fruit",
-			"requirements": [
-				"gatherable"
-			],
 			"duration": "30s",
 			"effect": "+3 health regeneration"
 		},
 		{
 			"name": "purple berries",
 			"type": "fruit",
-			"requirements": [
-				"gatherable"
-			],
 			"duration": "30s",
 			"effect": "+2 health regeneration"
 		},
 		{
 			"name": "hazelnut",
 			"type": "grain product",
-			"requirements": [
-				"gatherable"
-			],
 			"duration": "15m",
 			"effect": "+3 strength"
 		},
 		{
 			"name": "corncob",
 			"type": "grain product",
-			"requirements": [
-				"gatherable"
-			],
 			"duration": "10m",
 			"effect": "+1 strength"
 		},
 		{
 			"name": "red mushroom",
 			"type": "mushroom",
-			"requirements": [
-				"gatherable"
-			],
 			"duration": "10m",
 			"effect": "+1 intelligence"
 		},
 		{
 			"name": "gentian",
 			"type": "herb",
-			"requirements": [
-				"gatherable"
-			],
 			"duration": "25m",
 			"effect": "+5 spirit"
 		},
 		{
 			"name": "grapple plant",
 			"type": "herb",
-			"requirements": [
-				"gatherable"
-			],
 			"duration": "25m",
 			"effect": "+5 spirit"
 		},
 		{
 			"name": "sage leaves",
 			"type": "herb",
-			"requirements": [
-				"gatherable"
-			],
 			"duration": "10m",
 			"effect": "+4 spirit"
 		},
 		{
 			"name": "stinging nettle",
 			"type": "herb",
-			"requirements": [
-				"gatherable"
-			],
 			"duration": "15m",
 			"effect": "+3 spirit"
 		},
 		{
 			"name": "aureolin flower",
 			"type": "herb",
-			"requirements": [
-				"gatherable"
-			],
 			"duration": "10m",
 			"effect": "+2 spirit"
 		},
 		{
 			"name": "frizzy goat milk",
 			"type": "liquid",
-			"requirements": [
-				"gatherable"
-			],
 			"duration": "20m",
 			"effect": "+4 endurance"
 		},
 		{
 			"name": "milk",
 			"type": "liquid",
-			"requirements": [
-				"gatherable"
-			],
 			"duration": "15m",
 			"effect": "+2 endurance, +2 stamina recharge"
 		},
 		{
 			"name": "water",
 			"type": "liquid",
-			"requirements": [
-				"gatherable"
-			],
 			"duration": "10m",
 			"effect": "+1 endurance, +2 stamina recharge"
 		},
 		{
 			"name": "eggs",
 			"type": "eggs",
-			"requirements": [
-				"gatherable"
-			],
 			"duration": "10m",
 			"effect": "+2 endurance"
 		}
