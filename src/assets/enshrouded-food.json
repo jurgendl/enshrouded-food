@@ -443,7 +443,7 @@
 		},
 		{
 			"name": "ectoplasm soup",
-			"type": "ectoplasm soup",
+			"type": "ectoplasm_soup",
 			"requirements": [
 				"collector"
 			],
@@ -460,7 +460,7 @@
 		},
 		{
 			"name": "greater ectoplasm soup",
-			"type": "ectoplasm soup",
+			"type": "ectoplasm_soup",
 			"requirements": [
 				"collector"
 			],
@@ -498,7 +498,7 @@
 		},
 		{
 			"name": "excellent ectoplasm soup",
-			"type": "ectoplasm soup",
+			"type": "ectoplasm_soup",
 			"requirements": [
 				"collector"
 			],
@@ -698,7 +698,7 @@
 		},
 		{
 			"name": "beef stew",
-			"type": "meat food",
+			"type": "meat_food",
 			"requirements": [
 				"farmer"
 			],
@@ -721,7 +721,7 @@
 		},
 		{
 			"name": "grilled fatty meat",
-			"type": "meat food",
+			"type": "meat_food",
 			"requirements": [
 				"farmer",
 				"oven"
@@ -736,7 +736,7 @@
 		},
 		{
 			"name": "meat wrap",
-			"type": "meat food",
+			"type": "meat_food",
 			"requirements": [
 				"farmer",
 				"oven"
@@ -774,7 +774,7 @@
 		},
 		{
 			"name": "chicken soup",
-			"type": "meat food",
+			"type": "meat_food",
 			"requirements": [
 				"farmer,",
 				"fireplace",
@@ -808,7 +808,7 @@
 		},
 		{
 			"name": "grilled dune armadillo",
-			"type": "meat food",
+			"type": "meat_food",
 			"requirements": [
 				"fireplace",
 				"cooking station"
@@ -824,7 +824,7 @@
 		},
 		{
 			"name": "grilled bird meat",
-			"type": "meat food",
+			"type": "meat_food",
 			"requirements": [
 				"fireplace",
 				"cooking station"
@@ -839,7 +839,7 @@
 		},
 		{
 			"name": "grilled game",
-			"type": "meat food",
+			"type": "meat_food",
 			"requirements": [
 				"fireplace",
 				"cooking station"
@@ -854,7 +854,7 @@
 		},
 		{
 			"name": "grilled wolf meat",
-			"type": "meat food",
+			"type": "meat_food",
 			"requirements": [
 				"fireplace",
 				"cooking station"
@@ -869,7 +869,7 @@
 		},
 		{
 			"name": "grilled lean meat",
-			"type": "meat food",
+			"type": "meat_food",
 			"requirements": [
 				"fireplace",
 				"cooking station"
@@ -1114,7 +1114,7 @@
 		},
 		{
 			"name": "open sandwich",
-			"type": "grain product",
+			"type": "grain_product",
 			"requirements": [
 				"farmer",
 				"oven"
@@ -1135,7 +1135,7 @@
 		},
 		{
 			"name": "flat bread",
-			"type": "grain product",
+			"type": "grain_product",
 			"requirements": [
 				"oven"
 			],
@@ -1155,7 +1155,7 @@
 		},
 		{
 			"name": "roasted corncob",
-			"type": "grain product",
+			"type": "grain_product",
 			"requirements": [
 				"fireplace"
 			],
@@ -1432,13 +1432,13 @@
 		},
 		{
 			"name": "hazelnut",
-			"type": "grain product",
+			"type": "grain_product",
 			"duration": "15m",
 			"effect": "+3 strength"
 		},
 		{
 			"name": "corncob",
-			"type": "grain product",
+			"type": "grain_product",
 			"duration": "10m",
 			"effect": "+1 strength"
 		},
