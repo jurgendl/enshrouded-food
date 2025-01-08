@@ -116,7 +116,7 @@ export class App {
 		];
 
 		//initialize table
-		const table = new Tabulator("#example-table", {
+		const table = new Tabulator("#tabulator", {
 			data:tabledata, //assign data to table
 			autoColumns:true, //create columns from data field names
 		});
