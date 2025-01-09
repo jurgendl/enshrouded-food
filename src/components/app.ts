@@ -2,9 +2,9 @@
 // npm install tabulator-tables --save
 // npm i --save-dev @types/tabulator-tables
 
-import {TabulatorFull as Tabulator} from 'tabulator-tables';
+//import {CellComponent, ColumnDefinition, Filter, Options, RowComponent, TabulatorFull as Tabulator} from 'tabulator-tables';
+import {ColumnDefinition, Options, TabulatorFull as Tabulator} from 'tabulator-tables';
 
-//import {Tabulator} from "tabulator-tables";
 
 export interface EnshroudedFood {
 	version: number;
@@ -41,6 +41,7 @@ export interface Ingredient {
 	count?: number;
 }
 
+
 // noinspection TypeScriptUnresolvedFunction
 export class App {
 	version = '1.0';
@@ -50,6 +51,10 @@ export class App {
 	localStorageVersionName = "enshrouded-food-version";
 
 	jsonUrl = 'assets/enshrouded-food.json?v=' + this.version;
+
+	tabledata: Item[] = [];
+
+	table!: Tabulator;
 
 	init(): void {
 		//($('.selectpicker') as any).selectpicker();
@@ -116,6 +121,7 @@ export class App {
 					ingredients: ingredientsCollected
 				};
 				console.log(JSON.stringify(consolidated, null, 2));
+				this.tabledata.push(consolidated);
 				allRequirementsForItem.filter(r => !allRequirements.includes(r)).forEach(r => allRequirements.push(r));
 			}
 		}
@@ -127,22 +133,55 @@ export class App {
 		allItems.sort();
 		console.log("allItems", JSON.stringify(allItems, null, 2));
 
-		//define data array
-		const tabledata = [
-			{id: 1, name: "Oli Bob", progress: 12, gender: "male", rating: 1, col: "red", dob: "19/02/1984", car: 1},
-			{id: 2, name: "Mary May", progress: 1, gender: "female", rating: 2, col: "blue", dob: "14/05/1982", car: true},
-			{id: 3, name: "Christine Lobowski", progress: 42, gender: "female", rating: 0, col: "green", dob: "22/05/1982", car: "true"},
-			{id: 4, name: "Brendon Philips", progress: 100, gender: "male", rating: 1, col: "orange", dob: "01/08/1980"},
-			{id: 5, name: "Margret Marmajuke", progress: 16, gender: "female", rating: 5, col: "yellow", dob: "31/01/1999"},
-			{id: 6, name: "Frank Harbours", progress: 38, gender: "male", rating: 4, col: "red", dob: "12/05/1966", car: 1},
-		];
-
-		//initialize table
-		const table = new Tabulator("#tabulator", {
-			data: tabledata, //assign data to table
-			autoColumns: true, //create columns from data field names
-			height: "100%",
+		const columDefs: ColumnDefinition[] = [];
+		columDefs.push({
+			title: "Name",
+			field: "name",
+			frozen: true
 		});
+		columDefs.push({
+			title: "Effect",
+			field: "effect"
+		});
+		columDefs.push({
+			title: "Type",
+			field: "type"
+		});
+		columDefs.push({
+			title: "Duration",
+			field: "duration"
+		});
+		allIngredients.forEach(ingredient => {
+			columDefs.push({
+				title: ingredient,
+				headerVertical: true,
+				hozAlign: "center",
+				sorter: "number",
+				formatter: (cell) => {
+					const data = cell.getData();
+					const ingredients = data['ingredients'] as Ingredient[];
+					if (!ingredients) return "";
+					const m: Ingredient[] = ingredients.filter(x => x.name === ingredient);
+					if (!m || m.length == 0) return "";
+					return String(m.at(0)?.count ?? 0);
+				}
+			});
+		});
+		const options: Options = {
+			//placeholder: "Awaiting Data",
+			//height: '700', // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
+			data: this.tabledata, //assign data to table
+			//layout: "fitColumns", //fit columns to width of table (optional)
+			//layout: "fitDataTable",
+			layoutColumnsOnNewData: true,
+			// responsiveLayout:"hide", // hide rows that no longer fit
+			// responsiveLayout:"collapse", // collapse columns that no longer fit on the table into a list under the row
+			resizableRows: false, // this option takes a boolean value (default = false)
+			selectableRows: true, //make rows selectable
+			columns: columDefs,
+			//rowHeight: 40,
+		};
+		this.table = new Tabulator("#tabulator", options);
 	}
 
 	collapseIngredients(ingredients: Ingredient[]): Ingredient[] {
@@ -165,7 +204,6 @@ export class App {
 	collateIngredients(allIngredients: string[], allRequirementsForItem: string[], itemsMap: Map<string, Item>, weight: number, ingredients: Ingredient[]): Ingredient[] {
 		const ingredientsCollected: Ingredient[] = [];
 		for (const ingredient of ingredients) {
-			if (!allIngredients.includes(ingredient.name)) allIngredients.push(ingredient.name);
 			let localWeight = weight * (ingredient.count ?? 1);
 			if (itemsMap.has(ingredient.name)) {
 				const deep = itemsMap.get(ingredient.name) as Item;
@@ -176,6 +214,7 @@ export class App {
 					ingredientsCollected.push(...deepIngredients);
 				}
 			} else {
+				if (!allIngredients.includes(ingredient.name)) allIngredients.push(ingredient.name);
 				ingredientsCollected.push({name: ingredient.name, count: localWeight});
 			}
 		}
