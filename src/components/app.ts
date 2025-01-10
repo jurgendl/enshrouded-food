@@ -3,7 +3,7 @@
 // npm i --save-dev @types/tabulator-tables
 
 //import {CellComponent, ColumnDefinition, Filter, Options, RowComponent, TabulatorFull as Tabulator} from 'tabulator-tables';
-import {ColumnDefinition, Options, TabulatorFull as Tabulator} from 'tabulator-tables';
+import {CellComponent, ColumnDefinition, Options, TabulatorFull as Tabulator} from 'tabulator-tables';
 
 
 export interface EnshroudedFood {
@@ -137,22 +137,45 @@ export class App {
 		columDefs.push({
 			title: "Name",
 			field: "name",
-			frozen: true
+			frozen: true,
+			formatter: (cell: CellComponent, formatterParams: object) => {
+				const foodRow: Item = cell.getData() as Item;
+				return `<div title="${foodRow.name}">
+							<img width=32 height=32 src="assets/images/${foodRow.name.replaceAll(' ','-')}.png">&nbsp;${foodRow.name}
+						</div>`;
+			}
 		});
-		columDefs.push({
+		const infoGroupColumDef: ColumnDefinition = {//create column group
+			title: "Info",
+			frozen: true,
+			columns: []
+		};
+		columDefs.push(infoGroupColumDef);
+		infoGroupColumDef.columns!.push({
 			title: "Effect",
-			field: "effect"
+			field: "effect",
+			formatter: (cell: CellComponent, formatterParams: object) => {
+				const foodRow: Item = cell.getData() as Item;
+				return foodRow.effect!.replaceAll(",","<br>");
+			}
 		});
-		columDefs.push({
+		infoGroupColumDef.columns!.push({
 			title: "Type",
-			field: "type"
+			field: "type",
+			headerVertical: true
 		});
-		columDefs.push({
+		infoGroupColumDef.columns!.push({
 			title: "Duration",
-			field: "duration"
+			field: "duration",
+			headerVertical: true
 		});
+		const ingredientsGroupColumDef: ColumnDefinition = {//create column group
+			title: "Info",
+			columns: []
+		};
+		columDefs.push(ingredientsGroupColumDef);
 		allIngredients.forEach(ingredient => {
-			columDefs.push({
+			ingredientsGroupColumDef.columns!.push({
 				title: ingredient,
 				headerVertical: true,
 				hozAlign: "center",

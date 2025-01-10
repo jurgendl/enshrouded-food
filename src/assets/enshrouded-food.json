@@ -115,7 +115,7 @@
 		{
 			"name": "mana potion",
 			"type": "potion",
-			"effect": "+80 health",
+			"effect": "+80 mana",
 			"duration": "instant",
 			"requirements": [
 				"alchemist",
@@ -131,7 +131,7 @@
 		{
 			"name": "greater mana potion",
 			"type": "potion",
-			"effect": "+150 health",
+			"effect": "+150 mana",
 			"duration": "instant",
 			"requirements": [
 				"alchemist",
@@ -150,7 +150,7 @@
 		{
 			"name": "superior mana potion",
 			"type": "potion",
-			"effect": "+250 health",
+			"effect": "+250 mana",
 			"duration": "instant",
 			"requirements": [
 				"alchemist",
@@ -172,7 +172,7 @@
 		{
 			"name": "shroud survival flask",
 			"type": "potion",
-			"effect": "+2 minute of maximum time in the shroud",
+			"effect": "+2m of max time in the shroud",
 			"duration": "45m",
 			"requirements": [
 				"alchemist"
@@ -226,7 +226,7 @@
 		{
 			"name": "greater shroud survival flask",
 			"type": "potion",
-			"effect": "+4 minute of maximum time in the shroud",
+			"effect": "+4m of max time in the shroud",
 			"duration": "45m",
 			"requirements": [
 				"alchemist",
@@ -246,7 +246,7 @@
 		},
 		{
 			"name": "antiseptic",
-			"typo": "potion",
+			"type": "potion",
 			"effect": "cures poison effect",
 			"requirements": [
 				"alchemy station"
@@ -264,7 +264,7 @@
 		{
 			"name": "greater antidote",
 			"type": "potion",
-			"effect": "cures poison effect and negates next poisoning",
+			"effect": "cures poison effect, negates next poisoning",
 			"duration": "instant",
 			"requirements": [
 				"alchemist",
@@ -568,7 +568,7 @@
 		{
 			"name": "bandage",
 			"type": "bandage",
-			"effect": "+4% healing per second",
+			"effect": "+4% hp/s",
 			"duration": "10s",
 			"ingredients": [
 				{
@@ -595,7 +595,7 @@
 		{
 			"name": "cleaned bandage",
 			"type": "bandage",
-			"effect": "+6% healing per second",
+			"effect": "+6% hp/s",
 			"duration": "10s",
 			"requirements": [
 				"hunter"
@@ -615,7 +615,7 @@
 		{
 			"name": "improved bandage",
 			"type": "bandage",
-			"effect": "+8% healing per second",
+			"effect": "+8% hp/s",
 			"duration": "10s",
 			"requirements": [
 				"hunter"
@@ -706,7 +706,7 @@
 				"farmer"
 			],
 			"duration": "40m",
-			"effect": "+4 strength, +4 health regeneration, +4 constitution, +3 frost resistance",
+			"effect": "+4 strength, +4 health regen, +4 constitution, +3 frost resistance",
 			"ingredients": [
 				{
 					"name": "eggs"
@@ -1008,7 +1008,7 @@
 				"cooking station"
 			],
 			"duration": "7m",
-			"effect": "+20 stamina recharge",
+			"effect": "+20 stamina regen",
 			"ingredients": [
 				{
 					"name": "yucca fruit"
@@ -1023,7 +1023,7 @@
 				"almanac of plants and seedlings"
 			],
 			"duration": "5m",
-			"effect": "+20 stamina recharge",
+			"effect": "+20 stamina regen",
 			"ingredients": [
 				{
 					"name": "sugar cane",
@@ -1040,7 +1040,7 @@
 			],
 			"count": 5,
 			"duration": "5m",
-			"effect": "+7 stamina recharge",
+			"effect": "+7 stamina regen",
 			"ingredients": [
 				{
 					"name": "corncob",
@@ -1058,7 +1058,7 @@
 				"farmer"
 			],
 			"duration": "35m",
-			"effect": "+6 health regeneration, +4 stamina recharge, +2 frost resistance",
+			"effect": "+6 health regen, +4 stamina regen, +2 frost resistance",
 			"ingredients": [
 				{
 					"name": "pumpkin",
@@ -1082,7 +1082,7 @@
 				"farmer"
 			],
 			"duration": "45m",
-			"effect": "+6 health regeneration, +3 stamina recharge",
+			"effect": "+6 health regen, +3 stamina regen",
 			"count": 2,
 			"ingredients": [
 				{
@@ -1109,7 +1109,7 @@
 				"drying rack"
 			],
 			"duration": "5m",
-			"effect": "+1 health regeneration",
+			"effect": "+1 health regen",
 			"ingredients": [
 				{
 					"name": "purple berries"
@@ -1178,7 +1178,7 @@
 				"farmer"
 			],
 			"duration": "40m",
-			"effect": "+5 spirit, +5 intelligence, +2 mana recharge",
+			"effect": "+5 spirit, +5 intelligence, +2 mana regen",
 			"ingredients": [
 				{
 					"name": "yellow shroud mushroom",
@@ -1202,7 +1202,7 @@
 			],
 			"duration": "45m",
 			"count": 3,
-			"effect": "+5 intelligence, +60 seconds of shroud time",
+			"effect": "+5 intelligence, +60s of shroud time",
 			"ingredients": [
 				{
 					"name": "spice",
@@ -1273,7 +1273,7 @@
 				"farmer"
 			],
 			"duration": "30m",
-			"effect": "+5 endurance, +5 stamina recharge, +4 dexterity",
+			"effect": "+5 endurance, +5 stamina regen, +4 dexterity",
 			"ingredients": [
 				{
 					"name": "strawberry"
@@ -1312,7 +1312,7 @@
 				"farmer"
 			],
 			"duration": "40m",
-			"effect": "+4 endurance, +4 stamina recharge",
+			"effect": "+4 endurance, +4 stamina regen",
 			"ingredients": [
 				{
 					"name": "gentian"
@@ -1331,7 +1331,7 @@
 				"almanac of plants and seedlings"
 			],
 			"duration": "30m",
-			"effect": "+3 endurance, +7 stamina recharge",
+			"effect": "+3 endurance, +7 stamina regen",
 			"ingredients": [
 				{
 					"name": "rooibos"
@@ -1349,7 +1349,7 @@
 				"cooking station"
 			],
 			"duration": "15m",
-			"effect": "+3 endurance, +4 stamina recharge",
+			"effect": "+3 endurance, +4 stamina regen",
 			"ingredients": [
 				{
 					"name": "uncooked fae deer milk"
@@ -1364,7 +1364,7 @@
 				"cooking station"
 			],
 			"duration": "35m",
-			"effect": "+4 health regeneration, +2 endurance",
+			"effect": "+4 health regen, +2 endurance",
 			"ingredients": [
 				{
 					"name": "chamomile"
@@ -1382,7 +1382,7 @@
 				"cooking station"
 			],
 			"duration": "40m",
-			"effect": "+3 stamina recharge, +3 health regeneration, +2 mana recharge",
+			"effect": "+3 stamina regen, +3 health regen, +2 mana regen",
 			"ingredients": [
 				{
 					"name": "eggs"
@@ -1414,25 +1414,25 @@
 			"name": "honey",
 			"type": "sweet",
 			"duration": "3m",
-			"effect": "+15 stamina recharge"
+			"effect": "+15 stamina regen"
 		},
 		{
 			"name": "yucca fruit",
 			"type": "fruit",
 			"duration": "25m",
-			"effect": "+2 health regeneration, +1 stamina recharge"
+			"effect": "+2 health regen, +1 stamina regen"
 		},
 		{
 			"name": "strawberry",
 			"type": "fruit",
 			"duration": "30s",
-			"effect": "+3 health regeneration"
+			"effect": "+3 health regen"
 		},
 		{
 			"name": "purple berries",
 			"type": "fruit",
 			"duration": "30s",
-			"effect": "+2 health regeneration"
+			"effect": "+2 health regen"
 		},
 		{
 			"name": "hazelnut",
@@ -1492,13 +1492,13 @@
 			"name": "milk",
 			"type": "liquid",
 			"duration": "15m",
-			"effect": "+2 endurance, +2 stamina recharge"
+			"effect": "+2 endurance, +2 stamina regen"
 		},
 		{
 			"name": "water",
 			"type": "liquid",
 			"duration": "10m",
-			"effect": "+1 endurance, +2 stamina recharge"
+			"effect": "+1 endurance, +2 stamina regen"
 		},
 		{
 			"name": "eggs",
