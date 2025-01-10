@@ -145,7 +145,7 @@ export class App {
 					tooltip += ingredient.count + "x " + ingredient.name + "\n";
 				});
 				return `<div title="${tooltip}">
-							<img width=32 height=32 src="assets/images/${foodRow.name.replaceAll(' ', '-')}.png">&nbsp;${foodRow.name}
+							<img width=32 height=32 src="assets/enshrouded-images/${foodRow.name.replaceAll(' ', '-')}.png">&nbsp;${foodRow.name}
 						</div>`;
 			}
 		});
