@@ -140,8 +140,12 @@ export class App {
 			frozen: true,
 			formatter: (cell: CellComponent, formatterParams: object) => {
 				const foodRow: Item = cell.getData() as Item;
-				return `<div title="${foodRow.name}">
-							<img width=32 height=32 src="assets/images/${foodRow.name.replaceAll(' ','-')}.png">&nbsp;${foodRow.name}
+				let tooltip = foodRow.name + "\n";
+				foodRow.ingredients?.forEach(ingredient => {
+					tooltip += ingredient.count + "x " + ingredient.name + "\n";
+				});
+				return `<div title="${tooltip}">
+							<img width=32 height=32 src="assets/images/${foodRow.name.replaceAll(' ', '-')}.png">&nbsp;${foodRow.name}
 						</div>`;
 			}
 		});
@@ -156,7 +160,7 @@ export class App {
 			field: "effect",
 			formatter: (cell: CellComponent, formatterParams: object) => {
 				const foodRow: Item = cell.getData() as Item;
-				return foodRow.effect!.replaceAll(",","<br>");
+				return foodRow.effect!.replaceAll(",", "<br>");
 			}
 		});
 		infoGroupColumDef.columns!.push({
