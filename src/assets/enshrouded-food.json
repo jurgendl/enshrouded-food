@@ -42,7 +42,7 @@
 				"water",
 				"shroud spores",
 				"torn cloth",
-				"fizzy goat milk"
+				"milk"
 			]
 		},
 		{
@@ -97,7 +97,7 @@
 				"rubble",
 				"stone",
 				"vukah nesting material",
-				"uncooked fae deer fizzy goat milk"
+				"uncooked fae deer milk"
 			]
 		},
 		{
@@ -230,7 +230,9 @@
 				"silver ore",
 				"snow",
 				"yellow shroud mushroom",
-				"pumpkin"
+				"pumpkin",
+
+				"fizzy goat milk"
 			]
 		}
 	],
@@ -535,7 +537,7 @@
 					"name": "poison sack"
 				},
 				{
-					"name": "fizzy goat milk",
+					"name": "milk",
 					"count": 3
 				},
 				{
@@ -1502,7 +1504,7 @@
 			]
 		},
 		{
-			"name": "fizzy goat milkshake",
+			"name": "milkshake",
 			"type": "liquid",
 			"requirements": [
 				"farmer"
@@ -1577,7 +1579,7 @@
 			]
 		},
 		{
-			"name": "cooked fae deer fizzy goat milk",
+			"name": "cooked fae deer milk",
 			"type": "liquid",
 			"requirements": [
 				"farmer",
@@ -1587,7 +1589,7 @@
 			"effect": "+3 endurance, +4 stamina regen",
 			"ingredients": [
 				{
-					"name": "uncooked fae deer fizzy goat milk"
+					"name": "uncooked fae deer milk"
 				}
 			]
 		},
@@ -1724,7 +1726,7 @@
 			"effect": "+4 endurance"
 		},
 		{
-			"name": "fizzy goat milk",
+			"name": "milk",
 			"type": "liquid",
 			"duration": "15m",
 			"effect": "+2 endurance, +2 stamina regen"
