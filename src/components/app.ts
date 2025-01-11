@@ -3,7 +3,7 @@
 // npm i --save-dev @types/tabulator-tables
 
 //import {CellComponent, ColumnDefinition, Filter, Options, RowComponent, TabulatorFull as Tabulator} from 'tabulator-tables';
-import {CellComponent, ColumnDefinition, Options, TabulatorFull as Tabulator} from 'tabulator-tables';
+import {CellComponent, ColumnDefinition, CustomMutator, Options, TabulatorFull as Tabulator} from 'tabulator-tables';
 
 
 export interface EnshroudedFood {
@@ -120,18 +120,18 @@ export class App {
 					duration: item.duration,
 					ingredients: ingredientsCollected
 				};
-				console.log(JSON.stringify(consolidated, null, 2));
+				//console.log(JSON.stringify(consolidated, null, 2));
 				this.tabledata.push(consolidated);
 				allRequirementsForItem.filter(r => !allRequirements.includes(r)).forEach(r => allRequirements.push(r));
 			}
 		}
 		allRequirements.sort();
-		console.log("allRequirements");
+		//console.log("allRequirements");
 		allRequirements.forEach(x => console.log(x + ","));
 		allIngredients.sort();
-		console.log("allIngredients", JSON.stringify(allIngredients, null, 2));
+		//console.log("allIngredients", JSON.stringify(allIngredients, null, 2));
 		allItems.sort();
-		console.log("allItems", JSON.stringify(allItems, null, 2));
+		//console.log("allItems", JSON.stringify(allItems, null, 2));
 
 		const columDefs: ColumnDefinition[] = [];
 		columDefs.push({
@@ -141,9 +141,11 @@ export class App {
 			formatter: (cell: CellComponent, formatterParams: object) => {
 				const foodRow: Item = cell.getData() as Item;
 				let tooltip = foodRow.name + "\n";
-				foodRow.ingredients?.forEach(ingredient => {
-					tooltip += ingredient.count + "x " + ingredient.name + "\n";
-				});
+				if (foodRow.ingredients) {
+					foodRow.ingredients!.forEach(ingredient => {
+						tooltip += ingredient.count + "x " + ingredient.name + "\n";
+					});
+				}
 				return `<div title="${tooltip}">
 							<img width=32 height=32 src="assets/enshrouded-images/${foodRow.name.replaceAll(' ', '-')}.png">&nbsp;${foodRow.name}
 						</div>`;
@@ -178,20 +180,36 @@ export class App {
 			columns: []
 		};
 		columDefs.push(ingredientsGroupColumDef);
-		allIngredients.forEach(ingredient => {
+		allIngredients.forEach(ingredientName => {
+			const customMutator: CustomMutator = function (value: any, data: Item, type: any, params: any, component: CellComponent | undefined): number | undefined {
+				//value - original value of the cell
+				//data - the data for the row
+				//type - the type of mutation occurring  (data|edit)
+				//params - the mutatorParams object from the column definition
+				//component - when the "type" argument is "edit", this contains the cell component for the edited cell, otherwise it is the column component for the column
+				//return the new value for the cell data.
+				if (!data.ingredients) return undefined;
+				if (data.ingredients.length == 0) return undefined;
+				const ingredients: Ingredient[] = data.ingredients.filter(x => x.name == ingredientName);
+				if (!ingredients || ingredients.length == 0) return undefined;
+				return ingredients[0].count;
+			}
 			ingredientsGroupColumDef.columns!.push({
-				title: ingredient,
+				title: ingredientName,
 				headerVertical: true,
 				hozAlign: "center",
-				sorter: "number",
-				formatter: (cell) => {
+				//sorter: "number",
+				field: "calculatedIngredientValue_"+ingredientName,
+				mutatorParams: {},
+				mutator: customMutator
+				/*formatter: (cell) => {
 					const data = cell.getData();
 					const ingredients = data['ingredients'] as Ingredient[];
 					if (!ingredients) return "";
 					const m: Ingredient[] = ingredients.filter(x => x.name === ingredient);
 					if (!m || m.length == 0) return "";
 					return String(m.at(0)?.count ?? 0);
-				}
+				}*/
 			});
 		});
 		const options: Options = {

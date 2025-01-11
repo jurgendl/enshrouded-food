@@ -134,3 +134,4 @@ dist
 package-lock.json
 /.idea
 
+/src/assets/enshrouded-images
