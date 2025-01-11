@@ -144,15 +144,20 @@ export class App {
 				}
 			});
 		});
+		console.log(ingredientsByBiome);
 
 		this.tabledata.forEach(tableRow => {
 			tableRow.ingredients?.forEach(ingredient => {
 				const level = ingredientsByBiome.get(ingredient.name)!;
 				if (tableRow.level! < level) tableRow.level = level;
 			});
+			{
+				const level = ingredientsByBiome.get(tableRow.name);
+				if(level) if (tableRow.level! < level) tableRow.level = level;
+			}
 		});
 		this.tabledata.sort((a, b) => String(a.level).localeCompare(String(b.level)) || a.name.localeCompare(b.name));
-		console.log(JSON.stringify(this.tabledata, null, 2));
+		//console.log(JSON.stringify(this.tabledata, null, 2));
 
 		const columDefs: ColumnDefinition[] = [];
 		columDefs.push({
@@ -167,8 +172,9 @@ export class App {
 						tooltip += ingredient.count + "x " + ingredient.name + "\n";
 					});
 				}
+				// <img width=32 height=32 src="assets/enshrouded-images/${foodRow.name.replaceAll(' ', '_')}.png">&nbsp;
 				return `<div title="${tooltip}">
-							<img width=32 height=32 src="assets/enshrouded-images/${foodRow.name.replaceAll(' ', '_')}.png">&nbsp;${foodRow.name}
+							${foodRow.name}
 						</div>`;
 			}
 		});
