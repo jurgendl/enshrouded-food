@@ -144,16 +144,16 @@ export class App {
 				}
 			});
 		});
-		console.log(ingredientsByBiome);
+		//console.log(ingredientsByBiome);
 
 		this.tabledata.forEach(tableRow => {
 			tableRow.ingredients?.forEach(ingredient => {
-				const level = ingredientsByBiome.get(ingredient.name)!;
-				if (tableRow.level! < level) tableRow.level = level;
+				const level = ingredientsByBiome.get(ingredient.name);
+				if (level != undefined) if (tableRow.level != undefined) if (tableRow.level < level) tableRow.level = level;
 			});
 			{
 				const level = ingredientsByBiome.get(tableRow.name);
-				if(level) if (tableRow.level! < level) tableRow.level = level;
+				if (level != undefined) if (tableRow.level != undefined) if (tableRow.level < level) tableRow.level = level;
 			}
 		});
 		this.tabledata.sort((a, b) => String(a.level).localeCompare(String(b.level)) || a.name.localeCompare(b.name));
@@ -202,7 +202,8 @@ export class App {
 			field: "duration",
 			headerVertical: true
 		});
-		infoGroupColumDef.columns!.push({
+		// eslint-disable-next-line no-constant-condition
+		if(false) infoGroupColumDef.columns!.push({
 			title: "Level",
 			field: "level",
 			headerVertical: true
