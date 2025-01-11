@@ -3,11 +3,12 @@
 // npm i --save-dev @types/tabulator-tables
 
 //import {CellComponent, ColumnDefinition, Filter, Options, RowComponent, TabulatorFull as Tabulator} from 'tabulator-tables';
-import {CellComponent, ColumnDefinition, CustomMutator, Options, TabulatorFull as Tabulator} from 'tabulator-tables';
+import {CellComponent, ColumnDefinition, Options, TabulatorFull as Tabulator} from 'tabulator-tables';
 
 
 export interface EnshroudedFood {
 	version: number;
+	biomes: Biome[];
 	items: Item[];
 }
 
@@ -26,6 +27,12 @@ export enum FoodType {
 	potion = "potion",
 }
 
+export interface Biome {
+	name: string;
+	requirements: string[];
+	ingredients: string[];
+}
+
 export interface Item {
 	name: string;
 	count?: number;
@@ -33,7 +40,8 @@ export interface Item {
 	duration?: string;
 	type?: FoodType;
 	requirements?: string[];
-	ingredients?: Ingredient[]
+	ingredients?: Ingredient[];
+	level: number | undefined;
 }
 
 export interface Ingredient {
@@ -54,7 +62,7 @@ export class App {
 
 	tabledata: Item[] = [];
 
-	table!: Tabulator;
+	table?: Tabulator = undefined;
 
 	init(): void {
 		//($('.selectpicker') as any).selectpicker();
@@ -91,19 +99,16 @@ export class App {
 
 		const itemsMap = new Map<string, Item>();
 		enshroudedFood.items.filter(item => !!item.ingredients).forEach(item => itemsMap.set(item.name, item));
-		const allIngredients: string[] = [];
 		const allRequirements: string[] = [];
-		const allItems: string[] = [];
 
 		for (const item of enshroudedFood.items) {
 			if (item.effect) {
-				allItems.push(item.name);
 				const allRequirementsForItem: string[] = [];
 				item.requirements?.forEach(r => allRequirementsForItem.push(r));
 				let ingredientsCollected: Ingredient[];
 				if (item.ingredients) {
 					const localWeight = 1 / (item.count ?? 1);
-					const tmp = this.collateIngredients(allIngredients, allRequirementsForItem, itemsMap, localWeight, item.ingredients);
+					const tmp = this.collateIngredients(allRequirementsForItem, itemsMap, localWeight, item.ingredients);
 					ingredientsCollected = this.collapseIngredients(tmp);
 				} else {
 					ingredientsCollected = [];
@@ -118,20 +123,36 @@ export class App {
 					effect: item.effect,
 					type: item.type,
 					duration: item.duration,
-					ingredients: ingredientsCollected
+					ingredients: ingredientsCollected,
+					level: -1
 				};
-				//console.log(JSON.stringify(consolidated, null, 2));
 				this.tabledata.push(consolidated);
 				allRequirementsForItem.filter(r => !allRequirements.includes(r)).forEach(r => allRequirements.push(r));
 			}
 		}
-		allRequirements.sort();
-		//console.log("allRequirements");
-		allRequirements.forEach(x => console.log(x + ","));
-		allIngredients.sort();
-		//console.log("allIngredients", JSON.stringify(allIngredients, null, 2));
-		allItems.sort();
-		//console.log("allItems", JSON.stringify(allItems, null, 2));
+
+		const ingredientsByBiome = new Map<string, number>();
+		enshroudedFood.biomes.forEach((biome, index) => {
+			biome.ingredients.forEach(ingredient => {
+				const oldIndex = ingredientsByBiome.get(ingredient);
+				if (oldIndex) {
+					if (oldIndex > index) {
+						ingredientsByBiome.set(ingredient, index);
+					}
+				} else {
+					ingredientsByBiome.set(ingredient, index);
+				}
+			});
+		});
+
+		this.tabledata.forEach(tableRow => {
+			tableRow.ingredients?.forEach(ingredient => {
+				const level = ingredientsByBiome.get(ingredient.name)!;
+				if (tableRow.level! < level) tableRow.level = level;
+			});
+		});
+		this.tabledata.sort((a, b) => String(a.level).localeCompare(String(b.level)) || a.name.localeCompare(b.name));
+		console.log(JSON.stringify(this.tabledata, null, 2));
 
 		const columDefs: ColumnDefinition[] = [];
 		columDefs.push({
@@ -147,7 +168,7 @@ export class App {
 					});
 				}
 				return `<div title="${tooltip}">
-							<img width=32 height=32 src="assets/enshrouded-images/${foodRow.name.replaceAll(' ', '-')}.png">&nbsp;${foodRow.name}
+							<img width=32 height=32 src="assets/enshrouded-images/${foodRow.name.replaceAll(' ', '_')}.png">&nbsp;${foodRow.name}
 						</div>`;
 			}
 		});
@@ -175,41 +196,49 @@ export class App {
 			field: "duration",
 			headerVertical: true
 		});
+		infoGroupColumDef.columns!.push({
+			title: "Level",
+			field: "level",
+			headerVertical: true
+		});
 		const ingredientsGroupColumDef: ColumnDefinition = {//create column group
-			title: "Info",
+			title: "Ingredients",
 			columns: []
 		};
 		columDefs.push(ingredientsGroupColumDef);
-		allIngredients.forEach(ingredientName => {
-			const customMutator: CustomMutator = function (value: any, data: Item, type: any, params: any, component: CellComponent | undefined): number | undefined {
-				//value - original value of the cell
-				//data - the data for the row
-				//type - the type of mutation occurring  (data|edit)
-				//params - the mutatorParams object from the column definition
-				//component - when the "type" argument is "edit", this contains the cell component for the edited cell, otherwise it is the column component for the column
-				//return the new value for the cell data.
-				if (!data.ingredients) return undefined;
-				if (data.ingredients.length == 0) return undefined;
-				const ingredients: Ingredient[] = data.ingredients.filter(x => x.name == ingredientName);
-				if (!ingredients || ingredients.length == 0) return undefined;
-				return ingredients[0].count;
-			}
-			ingredientsGroupColumDef.columns!.push({
-				title: ingredientName,
-				headerVertical: true,
-				hozAlign: "center",
-				//sorter: "number",
-				field: "calculatedIngredientValue_"+ingredientName,
-				mutatorParams: {},
-				mutator: customMutator
-				/*formatter: (cell) => {
-					const data = cell.getData();
-					const ingredients = data['ingredients'] as Ingredient[];
-					if (!ingredients) return "";
-					const m: Ingredient[] = ingredients.filter(x => x.name === ingredient);
-					if (!m || m.length == 0) return "";
-					return String(m.at(0)?.count ?? 0);
-				}*/
+		enshroudedFood.biomes.forEach((biome, index) => {
+			const biomeGroupColumDef: ColumnDefinition = {//create column group
+				title: biome.name,
+				columns: []
+			};
+			ingredientsGroupColumDef.columns!.push(biomeGroupColumDef);
+			const toSort: string[] = [];
+			ingredientsByBiome.forEach((idx, name) => {
+				if (idx == index) toSort.push(name);
+			});
+			toSort.sort((a, b) => a.localeCompare(b));
+			toSort.forEach(ingredientName => {
+				biomeGroupColumDef.columns!.push({
+					title: ingredientName,
+					headerVertical: true,
+					hozAlign: "center",
+					sorter: "number",
+					field: ingredientName + "_value",
+					mutatorParams: {},
+					// https://tabulator.info/docs/6.3/mutators
+					mutator: (value: any, data: Item, type: any, params: any, component: CellComponent | undefined): number | undefined => {
+						//value - original value of the cell
+						//data - the data for the row
+						//type - the type of mutation occurring  (data|edit)
+						//params - the mutatorParams object from the column definition
+						//component - when the "type" argument is "edit", this contains the cell component for the edited cell, otherwise it is the column component for the column
+						//return the new value for the cell data.
+						if (!data.ingredients || data.ingredients.length == 0) return undefined;
+						const ingredients: Ingredient[] = data.ingredients.filter(x => x.name == ingredientName);
+						if (!ingredients || ingredients.length == 0) return undefined;
+						return ingredients[0].count;
+					}
+				});
 			});
 		});
 		const options: Options = {
@@ -222,7 +251,7 @@ export class App {
 			// responsiveLayout:"hide", // hide rows that no longer fit
 			// responsiveLayout:"collapse", // collapse columns that no longer fit on the table into a list under the row
 			resizableRows: false, // this option takes a boolean value (default = false)
-			selectableRows: true, //make rows selectable
+			selectableRows: false, //make rows selectable
 			columns: columDefs,
 			//rowHeight: 40,
 		};
@@ -246,7 +275,7 @@ export class App {
 		return collapsed;
 	}
 
-	collateIngredients(allIngredients: string[], allRequirementsForItem: string[], itemsMap: Map<string, Item>, weight: number, ingredients: Ingredient[]): Ingredient[] {
+	collateIngredients(allRequirementsForItem: string[], itemsMap: Map<string, Item>, weight: number, ingredients: Ingredient[]): Ingredient[] {
 		const ingredientsCollected: Ingredient[] = [];
 		for (const ingredient of ingredients) {
 			let localWeight = weight * (ingredient.count ?? 1);
@@ -255,11 +284,10 @@ export class App {
 				deep.requirements?.filter(r => !allRequirementsForItem.includes(r)).forEach(r => allRequirementsForItem.push(r));
 				if (deep.ingredients) {
 					localWeight /= (deep.count ?? 1);
-					const deepIngredients: Ingredient[] = this.collateIngredients(allIngredients, allRequirementsForItem, itemsMap, localWeight, deep.ingredients);
+					const deepIngredients: Ingredient[] = this.collateIngredients(allRequirementsForItem, itemsMap, localWeight, deep.ingredients);
 					ingredientsCollected.push(...deepIngredients);
 				}
 			} else {
-				if (!allIngredients.includes(ingredient.name)) allIngredients.push(ingredient.name);
 				ingredientsCollected.push({name: ingredient.name, count: localWeight});
 			}
 		}
