@@ -122,6 +122,7 @@ export class App {
 					ingredientsCollected = this.collapseIngredients(tmp);
 				} else {
 					ingredientsCollected = [];
+					ingredientsCollected.push({name: item.name, count: 1});
 				}
 				ingredientsCollected.forEach(it => {
 					it.count = Number(it.count!.toFixed(1));
