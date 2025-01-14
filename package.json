@@ -50,6 +50,7 @@
 	"dependencies": {
 		"@types/bootstrap-select": "^1.13.4",
 		"bootstrap-select": "^1.13.18",
-		"tabulator-tables": "^6.3.0"
+		"tabulator-tables": "^6.3.0",
+		"tippy.js": "^6.3.7"
 	}
 }

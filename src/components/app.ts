@@ -2,6 +2,10 @@
 // npm install tabulator-tables --save
 // npm i --save-dev @types/tabulator-tables
 
+import tippy from 'tippy.js';
+import 'tippy.js/dist/tippy.css';
+import 'tippy.js/themes/translucent.css';
+
 //import {CellComponent, ColumnDefinition, Filter, Options, RowComponent, TabulatorFull as Tabulator} from 'tabulator-tables';
 import {CellComponent, ColumnDefinition, Options, TabulatorFull as Tabulator} from 'tabulator-tables';
 
@@ -49,6 +53,10 @@ export interface Ingredient {
 	count?: number;
 }
 
+// must cast as any to set property on window
+const _global = (window /* browser */ || global /* node */) as any;
+//_global.$scrollToAnchor = scrollToAnchor;
+_global.$tippy = tippy;
 
 // noinspection TypeScriptUnresolvedFunction
 export class App {
@@ -97,6 +105,8 @@ export class App {
 		window.localStorage.setItem(this.localStorageJsonName, JSON.stringify(enshroudedFood));
 		window.localStorage.setItem(this.localStorageVersionName, this.version);
 
+		const initTooltips: string [] = [];
+
 		const itemsMap = new Map<string, Item>();
 		enshroudedFood.items.filter(item => !!item.ingredients).forEach(item => itemsMap.set(item.name, item));
 		const allRequirements: string[] = [];
@@ -131,32 +141,44 @@ export class App {
 			}
 		}
 
-		const ingredientsByBiome = new Map<string, number>();
+		const ingredientsByBiome0 = new Map<string, number>();
+		const biomesForIngredients = new Map<string, string>();
 		enshroudedFood.biomes.forEach((biome, index) => {
 			biome.ingredients.forEach(ingredient => {
-				const oldIndex = ingredientsByBiome.get(ingredient);
-				if (oldIndex) {
-					if (oldIndex > index) {
-						ingredientsByBiome.set(ingredient, index);
+				{
+					const biomesForIngredient = biomesForIngredients.get(ingredient);
+					biomesForIngredients.set(ingredient, (biomesForIngredient ? biomesForIngredient + '\n' : '') + biome.name);
+				}
+				{
+					const oldIndex = ingredientsByBiome0.get(ingredient);
+					if (oldIndex) {
+						if (oldIndex > index) {
+							ingredientsByBiome0.set(ingredient, index);
+						}
+					} else {
+						ingredientsByBiome0.set(ingredient, index);
 					}
-				} else {
-					ingredientsByBiome.set(ingredient, index);
 				}
 			});
 		});
 		//console.log(ingredientsByBiome);
+		//console.log(biomesForIngredients);
 
+		const ingredientsForItems: string[] = [];
 		this.tabledata.forEach(tableRow => {
 			tableRow.ingredients?.forEach(ingredient => {
-				const level = ingredientsByBiome.get(ingredient.name);
+				if (!ingredientsForItems.includes(ingredient.name)) ingredientsForItems.push(ingredient.name);
+				const level = ingredientsByBiome0.get(ingredient.name);
 				if (level != undefined) if (tableRow.level != undefined) if (tableRow.level < level) tableRow.level = level;
 			});
 			{
-				const level = ingredientsByBiome.get(tableRow.name);
+				if (!ingredientsForItems.includes(tableRow.name)) ingredientsForItems.push(tableRow.name);
+				const level = ingredientsByBiome0.get(tableRow.name);
 				if (level != undefined) if (tableRow.level != undefined) if (tableRow.level < level) tableRow.level = level;
 			}
 		});
 		this.tabledata.sort((a, b) => String(a.level).localeCompare(String(b.level)) || a.name.localeCompare(b.name));
+		//console.log(ingredientsForItems);
 		//console.log(JSON.stringify(this.tabledata, null, 2));
 
 		const columDefs: ColumnDefinition[] = [];
@@ -172,9 +194,10 @@ export class App {
 						tooltip += ingredient.count + "x " + ingredient.name + "\n";
 					});
 				}
-				// <img width=32 height=32 src="assets/enshrouded-images/${foodRow.name.replaceAll(' ', '_')}.png">&nbsp;
-				return `<div title="${tooltip}">
-							${foodRow.name}
+				const localId = "rowheader_" + foodRow.name.replaceAll(' ', '_');
+				initTooltips.push(localId);
+				return `<div id="${localId}" title="${tooltip}">
+							<img width=32 height=32 src="assets/enshrouded-images/${foodRow.name.replaceAll(' ', '_')}.webp">&nbsp;${foodRow.name}
 						</div>`;
 			}
 		});
@@ -203,7 +226,7 @@ export class App {
 			headerVertical: true
 		});
 		// eslint-disable-next-line no-constant-condition
-		if(false) infoGroupColumDef.columns!.push({
+		if (false) infoGroupColumDef.columns!.push({
 			title: "Level",
 			field: "level",
 			headerVertical: true
@@ -219,14 +242,19 @@ export class App {
 				columns: []
 			};
 			ingredientsGroupColumDef.columns!.push(biomeGroupColumDef);
-			const toSort: string[] = [];
-			ingredientsByBiome.forEach((idx, name) => {
-				if (idx == index) toSort.push(name);
+			const ingredientsForItemsForBiome: string[] = [];
+			ingredientsForItems.forEach(ingredientForItem => {
+				if (index == ingredientsByBiome0.get(ingredientForItem)) ingredientsForItemsForBiome.push(ingredientForItem);
 			});
-			toSort.sort((a, b) => a.localeCompare(b));
-			toSort.forEach(ingredientName => {
+			ingredientsForItemsForBiome.sort((a, b) => a.localeCompare(b));
+			ingredientsForItemsForBiome.forEach(ingredientName => {
+				const localId = "colheader_" + ingredientName.replaceAll(' ', '_');
+				initTooltips.push(localId);
+				const tooltip = ingredientName + "\n\n" + biomesForIngredients.get(ingredientName);
 				biomeGroupColumDef.columns!.push({
-					title: ingredientName,
+					title: `<span id="${localId}" title="${tooltip}">
+								<img width=32 height=32 src="assets/enshrouded-images/${ingredientName.replaceAll(' ', '_')}.webp">&nbsp;${ingredientName}
+							</span>`,
 					headerVertical: true,
 					hozAlign: "center",
 					sorter: "number",
@@ -250,7 +278,7 @@ export class App {
 		});
 		const options: Options = {
 			//placeholder: "Awaiting Data",
-			//height: '700', // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
+			height: '700', // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
 			data: this.tabledata, //assign data to table
 			//layout: "fitColumns", //fit columns to width of table (optional)
 			//layout: "fitDataTable",
@@ -263,6 +291,28 @@ export class App {
 			//rowHeight: 40,
 		};
 		this.table = new Tabulator("#tabulator", options);
+		this.table.on("tableBuilt", () => {
+			initTooltips.forEach(id => {
+				const title = document.getElementById(id)?.getAttribute("title");
+				if (title) {
+					//document.getElementById(id)!.removeAttribute("title")
+					//this.createPopOver(id, title);
+					//console.log("init tippyjs", id, title.replaceAll("\n", "<br>"));
+				}
+			});
+		});
+	}
+
+	private createPopOver(id: string, content: string) {
+		tippy('#' + id, {
+			content: `${content}`,
+			allowHTML: true,
+			theme: 'light-border',
+			arrow: true,
+			trigger: 'click',
+			interactive: true,
+			animation: 'scale',
+		});
 	}
 
 	collapseIngredients(ingredients: Ingredient[]): Ingredient[] {
