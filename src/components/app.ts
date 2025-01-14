@@ -278,7 +278,7 @@ export class App {
 		});
 		const options: Options = {
 			//placeholder: "Awaiting Data",
-			height: '700', // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
+			height: '100%', // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
 			data: this.tabledata, //assign data to table
 			//layout: "fitColumns", //fit columns to width of table (optional)
 			//layout: "fitDataTable",
