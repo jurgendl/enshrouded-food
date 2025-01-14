@@ -287,7 +287,7 @@ export class App {
 			// responsiveLayout:"hide", // hide rows that no longer fit
 			// responsiveLayout:"collapse", // collapse columns that no longer fit on the table into a list under the row
 			resizableRows: false, // this option takes a boolean value (default = false)
-			selectableRows: false, //make rows selectable
+			selectableRows: true, //make rows selectable
 			columns: columDefs,
 			//rowHeight: 40,
 		};
