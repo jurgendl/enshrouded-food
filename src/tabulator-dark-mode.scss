@@ -1,5 +1,6 @@
-body[data-bs-theme="dark"] {
-	.tabulator.table-dark {
-
+body[data-bs-theme="light"] {
+	.tabulator .tabulator-header .tabulator-col {
+		background-color: #999
 	}
 }
+

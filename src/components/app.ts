@@ -6,8 +6,7 @@ import tippy from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/themes/translucent.css';
 
-//import {CellComponent, ColumnDefinition, Filter, Options, RowComponent, TabulatorFull as Tabulator} from 'tabulator-tables';
-import {CellComponent, ColumnDefinition, Options, TabulatorFull as Tabulator} from 'tabulator-tables';
+import {CellComponent, ColumnDefinition, Filter, Options, RowComponent, TabulatorFull as Tabulator} from 'tabulator-tables';
 
 
 export interface EnshroudedFood {
@@ -219,7 +218,11 @@ export class App {
 		infoGroupColumDef.columns!.push({
 			title: "Type",
 			field: "type",
-			headerVertical: true
+			headerVertical: true,
+			formatter: (cell: CellComponent, formatterParams: object) => {
+				const cellValue: string = cell.getValue();
+				return cellValue.replaceAll('_', ' ');
+			}
 		});
 		infoGroupColumDef.columns!.push({
 			title: "Duration",
@@ -227,8 +230,8 @@ export class App {
 			headerVertical: true
 		});
 		// eslint-disable-next-line no-constant-condition
-		if (false) infoGroupColumDef.columns!.push({
-			title: "Level",
+		infoGroupColumDef.columns!.push({
+			title: "Tier",
 			field: "level",
 			headerVertical: true
 		});
@@ -239,7 +242,7 @@ export class App {
 		columDefs.push(ingredientsGroupColumDef);
 		enshroudedFood.biomes.forEach((biome, index) => {
 			const biomeGroupColumDef: ColumnDefinition = {//create column group
-				title: biome.name,
+				title: '',//biome.name,
 				columns: []
 			};
 			ingredientsGroupColumDef.columns!.push(biomeGroupColumDef);
@@ -277,6 +280,15 @@ export class App {
 				});
 			});
 		});
+
+		for (const resource of ingredientsByBiome0.keys()) {
+			const style: HTMLStyleElement = document.createElement("style");
+			style.id = "style-" + resource.replaceAll(' ', '_');
+			style.innerHTML = "[tabulator-field='" + resource + "_value'] { display: none !important; }";
+			document.body.appendChild(style);
+			style.disabled = true;
+		}
+
 		const options: Options = {
 			//placeholder: "Awaiting Data",
 			height: '100%', // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
@@ -301,6 +313,61 @@ export class App {
 					//console.log("init tippyjs", id, title.replaceAll("\n", "<br>"));
 				}
 			});
+		});
+
+		this.table.on("dataFiltered", (filters: Filter[], rows: RowComponent[]) => {
+			//filters - array of filters currently applied
+			//rows - array of row components that pass the filters
+			/*for (const resource of this.tabledata) {
+				(<HTMLStyleElement>document.getElementById(`style-${resource}`)).disabled = true;
+			}
+			if (filters.length > 0) {
+				const keep: string[] = [];
+				for (const row  of rows) {
+					const foodRow: FoodRow = row.getData();
+					for (const resource of this.resources) {
+						if ((foodRow as any)[resource]) {
+							keep.push(resource);
+						}
+					}
+				}
+				for (const resource  of this.tabledata) {
+					const styleTagDisabled: boolean = keep.indexOf(resource) != -1;
+					$('#check_' + resource.replace(' ', '_').replace("'", '_')).prop('checked', styleTagDisabled);
+					(<HTMLStyleElement>document.getElementById(`style-${resource}`)).disabled = styleTagDisabled;
+				}
+			}*/
+		});
+
+		const clearFiltering = () => {
+			//
+			this.table!.clearFilter(true);
+			//
+			/*for (let i = 0; i < Object.keys(valheimFood.food).length; i++) {
+				this.table.deselectRow(i);
+			}*/
+			//
+			/*for (const resource of this.resources) {
+				$("#check_" + resource.replace(' ', '_').replace("'", '_')).prop('checked', true);
+			}*/
+		}
+
+		const updateFilter = () => {
+			const filters: Filter[] = [];
+
+			clearFiltering();
+
+			const biomeSelect: JQuery<HTMLElement> = $('#biomeSelect');
+			const biomeFilterVal: string[] = biomeSelect.val() as string[];
+			if (biomeFilterVal && biomeFilterVal.length > 0) {
+				filters.push({field: "level", type: "in", value: biomeFilterVal.map((str: string) => parseInt(str))});
+			}
+
+			if (filters.length > 0) this.table!.setFilter(filters);
+		};
+
+		(<HTMLButtonElement>document.getElementById("filter")).addEventListener("click", (event: MouseEvent) => {
+			updateFilter();
 		});
 	}
 
@@ -328,7 +395,6 @@ export class App {
 			} else {
 				collapsed.push(ingredient);
 			}
-
 		});
 		return collapsed;
 	}

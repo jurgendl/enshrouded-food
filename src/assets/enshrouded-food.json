@@ -409,7 +409,7 @@
 		{
 			"name": "shroud survival flask",
 			"type": "potion",
-			"effect": "+2m of max time in the shroud",
+			"effect": "+2m max shroud time",
 			"duration": "45m",
 			"requirements": [
 				"alchemist"
@@ -463,7 +463,7 @@
 		{
 			"name": "greater shroud survival flask",
 			"type": "potion",
-			"effect": "+4m of max time in the shroud",
+			"effect": "+4m max shroud time",
 			"duration": "45m",
 			"requirements": [
 				"alchemist",
@@ -687,7 +687,7 @@
 			"requirements": [
 				"collector"
 			],
-			"effect": "-50 health, +10% damage against hollow, +8% life leech against hollow",
+			"effect": "-50 health, +10% damage vs hollow, +8% life leech vs hollow",
 			"duration": "35m",
 			"ingredients": [
 				{
@@ -704,7 +704,7 @@
 			"requirements": [
 				"collector"
 			],
-			"effect": "-100 health, +12% damage against hollow, +9% life leech against hollow",
+			"effect": "-100 health, +12% damage vs hollow, +9% life leech vs hollow",
 			"duration": "50m",
 			"ingredients": [
 				{
@@ -742,7 +742,7 @@
 			"requirements": [
 				"collector"
 			],
-			"effect": "-150 health, +15% damage against hollow, +10% life leech against hollow",
+			"effect": "-150 health, +15% damage vs hollow, +10% life leech vs hollow",
 			"duration": "60m",
 			"ingredients": [
 				{
@@ -1004,8 +1004,6 @@
 			"requirements": [
 				"grinding stones"
 			],
-			"duration": "45m",
-			"effect": "+5 constitution, +1 intelligence",
 			"ingredients": [
 				{
 					"name": "wheat grains",
@@ -1439,7 +1437,7 @@
 			],
 			"duration": "45m",
 			"count": 3,
-			"effect": "+5 intelligence, +60s of shroud time",
+			"effect": "+5 intelligence, +1m of shroud time",
 			"ingredients": [
 				{
 					"name": "spice",
@@ -1651,7 +1649,17 @@
 			"name": "honey",
 			"type": "sweet",
 			"duration": "3m",
-			"effect": "+15 stamina regen"
+			"effect": "+15 stamina regen",
+			"count": 5,
+			"ingredients": [
+				{
+					"name": "sugar"
+				},
+				{
+					"name": "water",
+					"count": 2
+				}
+			]
 		},
 		{
 			"name": "yucca fruit",

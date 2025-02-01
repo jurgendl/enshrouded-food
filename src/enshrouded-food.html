@@ -19,8 +19,20 @@
 </head>
 <body>
 
-<div class="m-5">
-	<div id="tabulator" class="_thead-dark _table-dark"></div>
+<div class="m-3">
+	<select title="Tier" size="6" id="biomeSelect" class="form-select form-select-sm" multiple>
+		<option selected value="0">0: Springlands & Low Meadows</option>
+		<option selected value="1">1: Revelwood & Blackmire</option>
+		<option selected value="2">2: Hollow Halls</option>
+		<option selected value="3">3: Nomad Highlands</option>
+		<option selected value="4">4: Kindlewastes (Northern & Southern)</option>
+		<option selected value="5">5: Albaneve Summits</option>
+	</select>
+	<hr>
+	<button class="btn btn-sm btn-primary" id="filter">Filter</button>
+	<button class="btn btn-sm btn-secondary" id="filter-clear">Clear</button>
+	<hr>
+	<div id="tabulator"></div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script>
